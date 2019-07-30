@@ -22,21 +22,21 @@ class Crypto(numeral.Numeral):
     
 #     encoding = 'utf-8' 
     
-    def __init__(self, plaintext=None, ciphertext=None):
+    def __init__(self, plaintext=None, ciphertext=None, base=16):
         
         if plaintext is None:
             self.plaintext = ""
         else:
             self.plaintext = plaintext
             self.value = Crypto.ASCIIToHex(self.plaintext)
+            self.base = 16
             
         if ciphertext is None:
             self.ciphertext = ""
         else:
             self.ciphertext = ciphertext
             self.value = ciphertext
-            
-        self.base = 16
+            self.base = base
         
           
     def encodeSingleByteXOR(self, key_value):

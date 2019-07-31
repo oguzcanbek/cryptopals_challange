@@ -9,6 +9,7 @@ from libraries import numeral
 import re
 import binascii
 import numpy as np
+import copy
 from string import printable
 from string import ascii_letters
 
@@ -97,24 +98,34 @@ class Crypto(numeral.Numeral):
         return self.ciphertext
     
     
-    def decodeRepeatingByteXOR(self, key_value):
+    def decodeRepeatingByteXOR(self, key):
         
-        text_len = len(self.ciphertext)
-        key_len = len(key_value)
+        # Save the original key
+        dummy_key = copy.deepcopy(key)
+        
+        # Convert the key to Base2 to check for length
+        self.Base2()
+        dummy_key.Base2()
+        key_len = len(dummy_key.value)
+        text_len = len(self.value)
         repeat_len = int(text_len/key_len) + 1
         
-        key = numeral.Numeral(base=16)
-        dummy_key = ""
+        # Repeat the key until reaching the ciphertext length
+        dummy_key_str = ""
         for i in range(repeat_len):
-            dummy_key += key_value
-        dummy_key = dummy_key[:text_len]
-        key.value = dummy_key
-        key.value = Crypto.ASCIIToHex(key.value)
+            dummy_key_str += dummy_key.value
+        dummy_key_str = dummy_key_str[:text_len]
+#         print("key: ", dummy_key_str)
+        dummy_key.value = dummy_key_str
         
-        key.value = Crypto.XOR(self, key)
-        key.Base16()        
-        result = Crypto.toASCII(key.value)
+        # XOR the key and the ciphertext
+        dummy_key.value = Crypto.XOR(self, dummy_key)
+        dummy_key.Base16()
+        result = Crypto.toASCII(dummy_key.value)
         self.plaintext = result
+        
+#         # Revert the key to its original form
+#         key = original_key
         
         return self.plaintext
     

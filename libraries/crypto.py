@@ -114,9 +114,7 @@ class Crypto(numeral.Numeral):
         dummy_key_str = ""
         for i in range(repeat_len):
             dummy_key_str += dummy_key.value
-        dummy_key_str = dummy_key_str[:text_len]
-#         print("key: ", dummy_key_str)
-        dummy_key.value = dummy_key_str
+        dummy_key.value = dummy_key_str[:text_len]
         
         # XOR the key and the ciphertext
         dummy_key.value = Crypto.XOR(self, dummy_key)
